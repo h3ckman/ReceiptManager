@@ -1,22 +1,12 @@
 package com.heckmobile.receiptmanager;
 
-import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity
@@ -74,20 +64,18 @@ public class MainActivity extends ActionBarActivity
                         .commit();
                 */
 
-                //ReceiptsFragment frag = ReceiptsFragment.newInstance(position+1);
+                //ExpensesFragment frag = ExpensesFragment.newInstance(position+1);
 
-                ReceiptsFragment frag = new ReceiptsFragment();
+                ReceiptsFragment receiptsFrag = new ReceiptsFragment();
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, frag)
+                        .replace(R.id.container, receiptsFrag)
                         .commit();
 
                 break;
             case 2:
-                args.putInt(ARG_SECTION_NUMBER, position+1);
-                fragment.setArguments(args);
-
+                ExpensesFragment expensesFrag = new ExpensesFragment();
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, fragment)
+                        .replace(R.id.container, expensesFrag)
                         .commit();
                 break;
             case 3:

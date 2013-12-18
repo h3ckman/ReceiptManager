@@ -1,5 +1,12 @@
 package com.heckmobile.receiptmanager;
 
+import android.app.AlertDialog;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -11,6 +18,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,7 +27,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -57,6 +67,12 @@ public class NavigationDrawerFragment extends Fragment {
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
+
+    private Receipt newReceipt;
+    private EditText storeInput;
+    private EditText priceInput;
+    private EditText categoryInput;
+    private EditText descriptionInput;
 
     public NavigationDrawerFragment() {
     }
@@ -247,12 +263,52 @@ public class NavigationDrawerFragment extends Fragment {
             return true;
         }
 
+
         if (item.getItemId() == R.id.action_add) {
-            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
-            return true;
+            addReceiptEntry();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * If 'add' button is clicked, present a dialog.
+     */
+    private void addReceiptEntry() {
+        Toast.makeText(getActivity(), "Add a receipt", Toast.LENGTH_SHORT).show();
+        newReceipt = new Receipt();
+
+        LayoutInflater factory = LayoutInflater.from(getActivity());
+        final View newReceiptView = factory.inflate(R.layout.new_receipt_dialog, null);
+        storeInput = (EditText) newReceiptView.findViewById(R.id.store_textbox);
+        priceInput = (EditText) newReceiptView.findViewById(R.id.price_textbox);
+        categoryInput = (EditText) newReceiptView.findViewById(R.id.category_textbox);
+        descriptionInput = (EditText) newReceiptView.findViewById(R.id.description_textbox);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setTitle(R.string.dialog_new_entry)
+                .setView(newReceiptView);
+
+        builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                newReceipt.store = storeInput.getText().toString();
+                newReceipt.price = "$"+priceInput.getText().toString();
+                newReceipt.category = categoryInput.getText().toString();
+                newReceipt.description = descriptionInput.getText().toString();
+
+                AddData addData = new AddData(getActivity());
+                addData.execute();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     /**
@@ -278,5 +334,54 @@ public class NavigationDrawerFragment extends Fragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
+    }
+
+    class AddData extends AsyncTask {
+
+        Context context;
+
+        public AddData(Context c) {
+            super();
+            context = c;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Object doInBackground(Object... args) {
+            ReceiptDbHelper dbHelper = new ReceiptDbHelper(context);
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+            ContentValues values = new ContentValues();
+            values.put(Receipt.COLUMN_NAME_STORE, newReceipt.store);
+            values.put(Receipt.COLUMN_NAME_PRICE, newReceipt.price);
+            values.put(Receipt.COLUMN_NAME_CATEGORY, newReceipt.category);
+            values.put(Receipt.COLUMN_NAME_DESCRIPTION, newReceipt.description);
+
+            // Insert the new row, returning the primary key value of the new row
+            long newRowId;
+            newRowId = db.insert(Receipt.TABLE_NAME, null, values);
+            Log.d("Receipt Manager", "New item id: " + newRowId);
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Object[] values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            ReceiptsFragment r = new ReceiptsFragment();
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, r)
+                    .commit();
+        }
+
     }
 }

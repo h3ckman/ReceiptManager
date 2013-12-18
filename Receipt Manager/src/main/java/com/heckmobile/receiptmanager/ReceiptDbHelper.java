@@ -16,15 +16,16 @@ public class ReceiptDbHelper extends SQLiteOpenHelper{
     private static final String COMMA_SEP = ",";
 
     private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE " + ReceiptEntry.TABLE_NAME + " (" +
-                    ReceiptEntry._ID + " INTEGER PRIMARY KEY," +
-                    ReceiptEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
-                    ReceiptEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
-                    ReceiptEntry.COLUMN_NAME_PRICE + INTEGER_TYPE +
+            "CREATE TABLE " + Receipt.TABLE_NAME + " (" +
+                    Receipt._ID + " INTEGER PRIMARY KEY," +
+                    Receipt.COLUMN_NAME_STORE + TEXT_TYPE + COMMA_SEP +
+                    Receipt.COLUMN_NAME_PRICE + TEXT_TYPE + COMMA_SEP +
+                    Receipt.COLUMN_NAME_CATEGORY + TEXT_TYPE + COMMA_SEP +
+                    Receipt.COLUMN_NAME_DESCRIPTION + TEXT_TYPE +
             " )";
 
     private static final String SQL_DELETE_ENTRIES =
-            "DROP TABLE IF EXISTS " + ReceiptEntry.TABLE_NAME;
+            "DROP TABLE IF EXISTS " + Receipt.TABLE_NAME;
 
     public ReceiptDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
