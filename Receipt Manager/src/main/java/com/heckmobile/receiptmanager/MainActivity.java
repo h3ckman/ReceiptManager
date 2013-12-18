@@ -65,12 +65,22 @@ public class MainActivity extends ActionBarActivity
 
         switch (position+1) {
             case 1:
+                /*
                 args.putInt(ARG_SECTION_NUMBER, position+1);
                 fragment.setArguments(args);
 
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, fragment)
                         .commit();
+                */
+
+                //ReceiptsFragment frag = ReceiptsFragment.newInstance(position+1);
+
+                ReceiptsFragment frag = new ReceiptsFragment();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, frag)
+                        .commit();
+
                 break;
             case 2:
                 args.putInt(ARG_SECTION_NUMBER, position+1);

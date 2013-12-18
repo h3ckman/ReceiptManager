@@ -43,8 +43,6 @@ public class PlaceholderFragment extends Fragment {
         TextView textView = (TextView) rootView.findViewById(R.id.section_label);
         textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
 
-
-
         return rootView;
     }
 
@@ -67,47 +65,7 @@ public class PlaceholderFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    class LoadData extends AsyncTask {
 
-        Context context;
-
-        public LoadData(Context c) {
-            super();
-            context = c;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Object doInBackground(Object... args) {
-            ReceiptDbHelper dbHelper = new ReceiptDbHelper(context);
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-            ContentValues values = new ContentValues();
-            values.put(ReceiptEntry.COLUMN_NAME_TITLE, "Test");
-            values.put(ReceiptEntry.COLUMN_NAME_DESCRIPTION, "This is just a test");
-
-            // Insert the new row, returning the primary key value of the new row
-            long newRowId;
-            newRowId = db.insert(ReceiptEntry.TABLE_NAME, null, values);
-            
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Object[] values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-        }
-
-    }
 }
 
 

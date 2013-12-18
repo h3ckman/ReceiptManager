@@ -20,7 +20,7 @@ public class ReceiptDbHelper extends SQLiteOpenHelper{
                     ReceiptEntry._ID + " INTEGER PRIMARY KEY," +
                     ReceiptEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
                     ReceiptEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
-                    ReceiptEntry.COLUMN_NAME_PRICE + INTEGER_TYPE + COMMA_SEP +
+                    ReceiptEntry.COLUMN_NAME_PRICE + INTEGER_TYPE +
             " )";
 
     private static final String SQL_DELETE_ENTRIES =
